@@ -160,16 +160,20 @@ T BasicScheduler<T>::dequeue(void)
 int main(void)
 {
 	Queue<int>* MyQueue = new Queue<int>;
+	BasicScheduler<int>* Scheduler = new BasicScheduler<int>;
 
 	for (int count = 0; count < 10; count++)
 	{
+		int randNum = rand() % (10 - 1 + 1) + 1;
 		MyQueue->enqueue(count);
+		Scheduler->enqueue(count, randNum);
 	}
 	try
 	{
 		while (true)
 		{
-			cout << MyQueue->dequeue() << " ";
+			 // cout << MyQueue->dequeue() << " ";
+			cout << Scheduler->dequeue() << " ";
 		}
 	}
 	catch (char* message)
@@ -178,5 +182,6 @@ int main(void)
 	}
 
 	delete MyQueue;
+	delete Scheduler;
 	return 0;
 }
