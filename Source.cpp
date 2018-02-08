@@ -51,61 +51,6 @@ void Queue<T>::push(T value, int priority)
 template<typename T>
 Node<T>* Queue<T>::nodeDequeue(void)
 {
-	Node<T> *pTmp = pFront;
-	if (pFront != nullptr)
-	{
-		pFront = pFront->pPrevious;
-		if (pFront != nullptr) pFront->pNext = nullptr;
-		else pTop = pFront; //last node has been removed
-	}
-
-	return pTmp;
-}
-template<typename T>
-T Queue<T>::dequeue(void)
-{
-	if (count == 0) throw "Queue Empty!";
-
-	Node<T> *pTmp = nodeDequeue();
-	T ret;
-
-	if (pTmp != nullptr)
-	{
-		ret = pTmp->value;
-	}
-	else
-	{
-		throw "Error!";
-	}
-	delete pTmp;
-	count--;
-	return ret;
-}
-template<typename T>
-void Queue<T>::enqueue(T value, int priority)
-{
-	this->push(value, priority);
-
-	if (pFront == nullptr) pFront = pTop;
-	else(pTop->pNext)->pPrevious = pTop;
-}
-template<typename T>
-int Queue<T>::size()
-{
-	return count;
-}
-template<typename T>
-class BasicScheduler : public Queue<T>
-{
-public:
-	virtual T dequeue(void);
-
-private:
-	virtual Node<T>* nodeDequeue(void);
-};
-template<typename T>
-Node<T>* BasicScheduler<T>::nodeDequeue(void)
-{
 	Node<T>* pHighestPriorityNode = pFront;
 	Node<T>* pSeek = pFront;
 
@@ -144,7 +89,7 @@ Node<T>* BasicScheduler<T>::nodeDequeue(void)
 	return pHighestPriorityNode;
 }
 template<typename T>
-T BasicScheduler<T>::dequeue(void)
+T Queue<T>::dequeue(void)
 {
 	if (count == 0) throw "Scheduler Empty!";
 
@@ -157,23 +102,34 @@ T BasicScheduler<T>::dequeue(void)
 	delete pHighestPriorityNode;
 	return ret;
 }
+template<typename T>
+void Queue<T>::enqueue(T value, int priority)
+{
+	this->push(value, priority);
+
+	if (pFront == nullptr) pFront = pTop;
+	else(pTop->pNext)->pPrevious = pTop;
+}
+template<typename T>
+int Queue<T>::size()
+{
+	return count;
+}
+
 int main(void)
 {
 	Queue<int>* MyQueue = new Queue<int>;
-	BasicScheduler<int>* Scheduler = new BasicScheduler<int>;
 
 	for (int count = 0; count < 10; count++)
 	{
 		int randNum = rand() % (10 - 1 + 1) + 1;
-		MyQueue->enqueue(count);
-		Scheduler->enqueue(count, randNum);
+		MyQueue->enqueue(count,randNum);
 	}
 	try
 	{
 		while (true)
 		{
-			 // cout << MyQueue->dequeue() << " ";
-			cout << Scheduler->dequeue() << " ";
+			cout << MyQueue->dequeue() << " ";
 		}
 	}
 	catch (char* message)
@@ -182,6 +138,5 @@ int main(void)
 	}
 
 	delete MyQueue;
-	delete Scheduler;
 	return 0;
 }
